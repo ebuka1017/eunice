@@ -6,308 +6,120 @@
   <title>Eunice | Technical Debt Guardian for GitLab</title>
   <style>
     :root {
-      --bg: #0a0f14;
-      --bg-soft: #111b24;
-      --panel: rgba(255, 255, 255, 0.03);
-      --border: rgba(255, 255, 255, 0.12);
-      --text: #edf3f8;
-      --muted: #a8b7c4;
-      --accent: #10b981;
+      --bg: #0b1016;
+      --panel: #101923;
+      --panel-2: #0f1720;
+      --border: #223141;
+      --text: #ecf3f9;
+      --muted: #a4b4c3;
+      --accent: #22c55e;
       --accent-2: #60a5fa;
       --warn: #f59e0b;
-      --shadow: 0 20px 60px rgba(0,0,0,0.35);
+      --danger: #ef4444;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       --sans: Inter, ui-sans-serif, system-ui, sans-serif;
     }
-
     * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
     body {
       margin: 0;
       font-family: var(--sans);
       color: var(--text);
       background:
-        radial-gradient(circle at 10% -10%, rgba(96,165,250,0.25), transparent 40%),
-        radial-gradient(circle at 90% 0%, rgba(16,185,129,0.2), transparent 35%),
-        linear-gradient(180deg, #081017 0%, #0b131b 50%, #091018 100%);
+        radial-gradient(circle at 15% -10%, rgba(96,165,250,.18), transparent 35%),
+        radial-gradient(circle at 85% 0%, rgba(34,197,94,.14), transparent 35%),
+        linear-gradient(#0a0f14, #0b1118);
       line-height: 1.5;
     }
-
-    a { color: inherit; text-decoration: none; }
-    .wrap { max-width: 1120px; margin: 0 auto; padding: 1.25rem; }
-
+    a { color: #cfe8ff; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .wrap { max-width: 1040px; margin: 0 auto; padding: 1.2rem; }
     .nav {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      backdrop-filter: blur(10px);
-      background: rgba(8, 12, 18, 0.65);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
+      position: sticky; top: 0; z-index: 20;
+      background: rgba(10,15,20,.78); backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(255,255,255,.06);
     }
+    .nav-inner { display:flex; gap:1rem; justify-content:space-between; align-items:center; padding:.8rem 0; }
+    .brand { font-weight: 700; letter-spacing: -.03em; display:flex; align-items:center; gap:.5rem; }
+    .dot { width:.65rem; height:.65rem; border-radius:999px; background: linear-gradient(135deg,var(--accent),var(--accent-2)); }
+    .nav-links { display:flex; gap:.7rem; flex-wrap:wrap; }
+    .nav-links a { color: var(--muted); border:1px solid transparent; padding:.35rem .6rem; border-radius:999px; font-size:.92rem; }
+    .nav-links a:hover { color: var(--text); border-color: var(--border); background: rgba(255,255,255,.02); text-decoration:none; }
 
-    .nav-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      padding: 0.75rem 0;
-    }
-
-    .brand {
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      display: flex;
-      align-items: center;
-      gap: 0.55rem;
-    }
-
-    .brand-dot {
-      width: 0.65rem;
-      height: 0.65rem;
-      border-radius: 999px;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      box-shadow: 0 0 22px rgba(16,185,129,0.55);
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 0.9rem;
-      flex-wrap: wrap;
-    }
-
-    .nav-links a {
-      color: var(--muted);
-      font-size: 0.92rem;
-      border: 1px solid transparent;
-      padding: 0.35rem 0.6rem;
-      border-radius: 999px;
-    }
-
-    .nav-links a:hover { color: var(--text); border-color: var(--border); background: rgba(255,255,255,0.03); }
-
-    .hero {
-      padding: 3.25rem 0 2.25rem;
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 1.25rem;
-      align-items: start;
-    }
-
-    .hero-card, .panel {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      box-shadow: var(--shadow);
-    }
-
-    .hero-card { padding: 1.25rem; }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      padding: 0.35rem 0.7rem;
-      font-size: 0.8rem;
-      border-radius: 999px;
-      border: 1px solid rgba(16,185,129,0.3);
-      color: #c7f9e8;
-      background: rgba(16,185,129,0.08);
-      margin-bottom: 1rem;
-    }
-
-    h1 {
-      margin: 0 0 0.75rem;
-      line-height: 1.02;
-      letter-spacing: -0.04em;
-      font-size: clamp(2rem, 5vw, 3.8rem);
-    }
-
-    .hero p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 1.05rem;
-      max-width: 62ch;
-    }
-
-    .cta-row {
-      margin-top: 1.15rem;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.45rem;
-      padding: 0.75rem 0.95rem;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.02);
-      color: var(--text);
-      font-weight: 600;
-      transition: 140ms ease;
-    }
-
-    .btn:hover { transform: translateY(-1px); background: rgba(255,255,255,0.04); }
-    .btn.primary {
-      background: linear-gradient(135deg, rgba(16,185,129,0.2), rgba(96,165,250,0.12));
-      border-color: rgba(16,185,129,0.35);
-    }
-
-    .command {
-      margin-top: 1rem;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: #071019;
-      padding: 0.95rem;
-      font-family: var(--mono);
-      font-size: 0.9rem;
-      overflow-x: auto;
-      color: #d8e9f7;
-    }
-
-    .command .label { display: block; color: #87a2b8; margin-bottom: 0.45rem; font-size: 0.8rem; }
-    .command .ok { color: #67e8a5; }
-
-    .stat-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.8rem;
-      padding: 1rem;
-    }
-
-    .stat {
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 0.95rem;
-      background: rgba(255,255,255,0.02);
-    }
-
-    .stat .label { color: var(--muted); font-size: 0.82rem; display: block; }
-    .stat .value { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.03em; margin-top: 0.15rem; }
-
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 1rem;
-      margin: 1rem 0 1.2rem;
-    }
-
-    .card {
+    .hero { display:grid; grid-template-columns: 1.15fr .85fr; gap:1rem; padding: 2.4rem 0 1rem; }
+    .panel {
+      background: rgba(255,255,255,.02);
       border: 1px solid var(--border);
       border-radius: 16px;
       padding: 1rem;
-      background: rgba(255,255,255,0.02);
+      box-shadow: 0 14px 40px rgba(0,0,0,.22);
     }
-
-    .card h3 { margin: 0 0 0.45rem; font-size: 1rem; }
-    .card p, .card li { color: var(--muted); margin: 0; }
-
-    section { margin-top: 1rem; }
-    .section-title {
-      margin: 0 0 0.8rem;
-      font-size: 1.35rem;
-      letter-spacing: -0.03em;
+    h1 { margin:0 0 .7rem; font-size: clamp(2rem, 5vw, 3.2rem); line-height:1.02; letter-spacing:-.04em; }
+    h2 { margin: 0 0 .6rem; font-size: 1.25rem; letter-spacing:-.03em; }
+    h3 { margin: 0 0 .35rem; font-size: 1rem; }
+    p { margin: 0; color: var(--muted); }
+    .eyebrow {
+      display:inline-flex; align-items:center; gap:.45rem; margin-bottom:.8rem;
+      color:#d2f8de; background: rgba(34,197,94,.08); border:1px solid rgba(34,197,94,.25);
+      border-radius:999px; padding:.32rem .7rem; font-size:.8rem;
     }
+    .cta { display:flex; gap:.7rem; flex-wrap:wrap; margin-top:1rem; }
+    .btn { border:1px solid var(--border); background: rgba(255,255,255,.02); color: var(--text); padding:.7rem .9rem; border-radius:12px; font-weight:600; }
+    .btn:hover { background: rgba(255,255,255,.04); text-decoration:none; }
+    .btn.primary { border-color: rgba(34,197,94,.3); background: rgba(34,197,94,.08); }
 
-    .section-sub {
-      color: var(--muted);
-      margin: -0.15rem 0 0.9rem;
+    .code {
+      margin-top: .9rem; border:1px solid var(--border); border-radius:12px; background:#09111a;
+      padding:.9rem; font-family: var(--mono); font-size:.9rem; overflow-x:auto;
     }
+    .code .label { display:block; font-size:.78rem; color:#89a0b6; margin-bottom:.45rem; font-family: var(--sans); }
+    .ok { color:#77efaf; }
 
-    .two-col {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      align-items: start;
-    }
+    .stack { display:grid; gap:.8rem; }
+    .stat { border:1px solid var(--border); border-radius:12px; padding:.8rem; background: rgba(255,255,255,.015); }
+    .stat .k { color: var(--muted); font-size:.82rem; display:block; }
+    .stat .v { font-weight:700; margin-top:.15rem; }
 
-    .panel { padding: 1rem; }
+    .section { margin-top: 1rem; }
+    .sub { color: var(--muted); margin-bottom:.8rem; }
+    .grid3 { display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:.9rem; }
+    .card { border:1px solid var(--border); border-radius:14px; padding:.9rem; background: rgba(255,255,255,.018); }
+    .card p { margin-top:.1rem; }
 
-    .checklist { margin: 0; padding-left: 1.1rem; }
-    .checklist li { margin: 0.4rem 0; color: var(--muted); }
-    .checklist strong { color: var(--text); }
+    .two { display:grid; grid-template-columns: 1fr 1fr; gap:1rem; }
+    ol, ul { margin: 0; padding-left: 1.1rem; }
+    li { color: var(--muted); margin:.45rem 0; }
+    li strong { color: var(--text); }
+    code { font-family: var(--mono); background: rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.06); padding:.08rem .28rem; border-radius:6px; color:#dff0ff; }
 
-    .steps {
-      margin: 0;
-      padding-left: 1.1rem;
-    }
-    .steps li { margin: 0.5rem 0; color: var(--muted); }
-    .steps code, code {
-      font-family: var(--mono);
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      padding: 0.1rem 0.28rem;
-      border-radius: 6px;
-      color: #dff2ff;
-    }
+    .notice { border-left: 3px solid var(--warn); padding:.75rem .8rem; background: rgba(245,158,11,.05); border-radius:10px; }
+    .danger { border-left-color: var(--danger); background: rgba(239,68,68,.05); }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      overflow: hidden;
-      background: rgba(255,255,255,0.015);
-    }
-    th, td {
-      text-align: left;
-      padding: 0.8rem;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      vertical-align: top;
-    }
-    th { color: var(--text); font-size: 0.9rem; }
+    table { width:100%; border-collapse: collapse; border:1px solid var(--border); border-radius:14px; overflow:hidden; background: rgba(255,255,255,.015); }
+    th, td { padding:.75rem; text-align:left; border-bottom:1px solid rgba(255,255,255,.05); vertical-align: top; }
+    th { color: var(--text); font-size:.9rem; }
     td { color: var(--muted); }
-    tbody tr:last-child td { border-bottom: none; }
+    tr:last-child td { border-bottom:none; }
 
-    .pill-row { display: flex; flex-wrap: wrap; gap: 0.55rem; }
-    .pill {
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      padding: 0.35rem 0.65rem;
-      color: var(--muted);
-      background: rgba(255,255,255,0.02);
-      font-size: 0.85rem;
-    }
-
-    .warn {
-      border-color: rgba(245,158,11,0.3);
-      background: rgba(245,158,11,0.06);
-      color: #f8d79b;
-    }
-
-    .footer {
-      margin: 2rem 0 1rem;
-      color: #93a4b2;
-      font-size: 0.9rem;
-      text-align: center;
-    }
+    .footer { text-align:center; color:#95a8b8; font-size:.9rem; margin:2rem 0 1rem; }
 
     @media (max-width: 900px) {
-      .hero { grid-template-columns: 1fr; }
-      .two-col, .grid-3 { grid-template-columns: 1fr; }
-      .stat-grid { grid-template-columns: 1fr 1fr; }
+      .hero, .grid3, .two { grid-template-columns: 1fr; }
     }
-
     @media (max-width: 560px) {
-      .nav-inner { align-items: flex-start; flex-direction: column; }
-      .stat-grid { grid-template-columns: 1fr; }
-      .wrap { padding: 0.95rem; }
-      .hero { padding-top: 1.8rem; }
+      .nav-inner { flex-direction: column; align-items:flex-start; }
+      .wrap { padding: .95rem; }
     }
   </style>
 </head>
 <body>
   <div class="nav">
     <div class="wrap nav-inner">
-      <div class="brand"><span class="brand-dot"></span> eunice</div>
+      <div class="brand"><span class="dot"></span> eunice</div>
       <div class="nav-links">
-        <a href="#problem">Problem</a>
-        <a href="#demo">Demo</a>
+        <a href="#install">Install</a>
         <a href="#setup">Setup</a>
-        <a href="#methodology">Methodology</a>
+        <a href="#test">Test</a>
+        <a href="#troubleshooting">Troubleshooting</a>
         <a href="#docs">Docs</a>
       </div>
     </div>
@@ -315,170 +127,155 @@
 
   <div class="wrap">
     <section class="hero">
-      <div class="hero-card">
-        <div class="eyebrow">GitLab AI Hackathon build • Devpost-ready narrative</div>
-        <h1>Put a dollar value on technical debt. Then fix the highest ROI first.</h1>
+      <div class="panel">
+        <div class="eyebrow">Technical Debt Guardian for GitLab</div>
+        <h1>Find expensive technical debt and prioritize fixes by ROI.</h1>
         <p>
-          Eunice is a GitLab-first agent workflow that detects technical debt, pulls real repository activity
-          signals (commits, MR review times, issues, pipelines), and produces transparent cost + ROI guidance.
-          It creates actionable issues instead of just saying “this is complex.”
+          Eunice runs as GitLab Duo agent workflows. It combines Nia code analysis with GitLab repository signals
+          (commits, MRs, issues, pipelines) to produce transparent cost estimates and actionable issues.
         </p>
-        <div class="cta-row">
-          <a class="btn primary" href="https://github.com/ebuka1017/eunice">GitHub Repo</a>
-          <a class="btn" href="https://github.com/ebuka1017/eunice/blob/main/README.md">README</a>
-          <a class="btn" href="#demo">Demo Checklist</a>
+        <div class="cta">
+          <a class="btn primary" href="#install">Install</a>
           <a class="btn" href="#setup">Setup Steps</a>
+          <a class="btn" href="https://github.com/ebuka1017/eunice">GitHub</a>
+          <a class="btn" href="https://github.com/ebuka1017/eunice/blob/main/README.md">README</a>
         </div>
-        <div class="command">
-          <span class="label">Install into a GitLab project</span>
+        <div class="code">
+          <span class="label">One-command installer (run inside your GitLab project repo)</span>
           <span class="ok">curl -fsSL https://raw.githubusercontent.com/ebuka1017/eunice/main/install.sh | bash</span>
         </div>
       </div>
-
-      <aside class="hero-card">
-        <div class="stat-grid">
-          <div class="stat"><span class="label">Core output</span><div class="value">Cost + ROI</div></div>
-          <div class="stat"><span class="label">Data source</span><div class="value">GitLab APIs</div></div>
-          <div class="stat"><span class="label">Code analysis</span><div class="value">Nia</div></div>
-          <div class="stat"><span class="label">Workflow target</span><div class="value">MR + Reports</div></div>
-        </div>
-        <div class="panel" style="margin-top:0.8rem;">
-          <div style="font-weight:700; margin-bottom:0.4rem;">What judges can verify quickly</div>
-          <ul class="checklist">
-            <li><strong>Transparency:</strong> measured metrics vs assumptions are shown separately</li>
-            <li><strong>Actionability:</strong> issue creation and prioritization by ROI</li>
-            <li><strong>GitLab-native:</strong> Duo flows + CI context + repository signals</li>
-          </ul>
-        </div>
+      <aside class="panel stack">
+        <div class="stat"><span class="k">Requires</span><div class="v">GitLab + GitLab Duo + Nia API key</div></div>
+        <div class="stat"><span class="k">Adds</span><div class="v">.gitlab/duo configs + flows + eunice.yml</div></div>
+        <div class="stat"><span class="k">Triggers</span><div class="v">MR review, weekly audit, monthly report</div></div>
       </aside>
     </section>
 
-    <section id="problem">
-      <div class="panel">
-        <h2 class="section-title">Concrete Problem</h2>
-        <p class="section-sub">Most tools identify “bad code,” but teams still cannot justify refactoring time in business terms.</p>
+    <section id="install" class="section panel">
+      <h2>Install</h2>
+      <p class="sub">Run Eunice in the root of the GitLab project you want to analyze.</p>
+      <ol>
+        <li>Open a terminal in your target GitLab repository.</li>
+        <li>Run the installer command shown above.</li>
+        <li>Follow prompts for Nia setup (required) and Slack setup (optional).</li>
+      </ol>
+      <div class="notice" style="margin-top:.8rem;">
+        The installer writes <code>.gitlab/duo/</code> files and creates <code>eunice.yml</code>. Review and commit them before testing.
+      </div>
+    </section>
+
+    <section id="setup" class="section">
+      <h2>Setup (GitLab UI)</h2>
+      <p class="sub">These are the required dashboard steps after running the installer.</p>
+      <div class="two">
+        <div class="panel">
+          <h3>1. Add Required CI/CD Variable</h3>
+          <ol>
+            <li>Go to <strong>Settings -> CI/CD -> Variables</strong>.</li>
+            <li>Add <code>NIA_API_KEY</code>.</li>
+            <li>Paste your Nia API key value.</li>
+          </ol>
+          <div class="notice" style="margin-top:.8rem;">Slack variables are optional: <code>SLACK_BOT_TOKEN</code>, <code>SLACK_APP_TOKEN</code>, <code>SLACK_TEAM_ID</code>.</div>
+        </div>
+        <div class="panel">
+          <h3>2. Enable Eunice Agents</h3>
+          <ol>
+            <li>Go to <strong>Automate -> AI catalog</strong>.</li>
+            <li>Search for <code>eunice</code>.</li>
+            <li>Enable all three agents:</li>
+          </ol>
+          <ul>
+            <li><code>eunice-debt-detector</code></li>
+            <li><code>eunice-impact-analyzer</code></li>
+            <li><code>eunice-orchestrator</code></li>
+          </ul>
+        </div>
+      </div>
+      <div class="panel" style="margin-top:1rem;">
+        <h3>3. Commit Generated Files</h3>
+        <div class="code">
+          <span class="label">Commit and push the installer output in your GitLab repo</span>
+          <span class="ok">git add .gitlab/ eunice.yml && git commit -m "feat: add eunice" && git push</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="test" class="section">
+      <h2>Test It (Before Using in Production)</h2>
+      <p class="sub">Recommended smoke test for a clean first run.</p>
+      <div class="grid3">
+        <div class="card">
+          <h3>Create a test MR</h3>
+          <p>Use a branch with a file that has obvious debt signals (complex logic, TODOs, missing tests).</p>
+        </div>
+        <div class="card">
+          <h3>Trigger the MR flow</h3>
+          <p>Create or update the merge request. Eunice should run <code>eunice-mr-review</code>.</p>
+        </div>
+        <div class="card">
+          <h3>Verify outputs</h3>
+          <p>Check for an MR comment, transparent metrics, and issue creation if thresholds are met.</p>
+        </div>
+      </div>
+      <div class="panel" style="margin-top:1rem;">
+        <h3>What to look for in the MR comment</h3>
         <table>
-          <thead>
-            <tr><th>Typical tooling</th><th>Eunice output</th></tr>
-          </thead>
+          <thead><tr><th>Expected</th><th>Why it matters</th></tr></thead>
           <tbody>
-            <tr><td>“Cyclomatic complexity is high”</td><td>“This file costs ~$X/year in review + bugs + CI failures”</td></tr>
-            <tr><td>Static prioritization</td><td>ROI ranking based on effort vs impact</td></tr>
-            <tr><td>One-off findings</td><td>Weekly/monthly GitLab issue reports and trend tracking</td></tr>
-            <tr><td>Opaque scoring</td><td>Links to commits, MRs, issues, and pipelines used in calculations</td></tr>
+            <tr><td>Measured inputs (commits/MRs/issues/pipelines)</td><td>Shows the result is grounded in GitLab data</td></tr>
+            <tr><td>Assumptions from <code>eunice.yml</code></td><td>Makes cost calculations editable and transparent</td></tr>
+            <tr><td>ROI / priority score</td><td>Turns findings into prioritization</td></tr>
+            <tr><td>Actionable issue (for high-impact findings)</td><td>Proves orchestration, not just analysis</td></tr>
           </tbody>
         </table>
       </div>
     </section>
 
-    <section id="demo">
-      <h2 class="section-title">Demo / Recording Checklist</h2>
-      <p class="section-sub">Use this flow to test quickly and record a clean 2-3 minute Devpost video.</p>
-      <div class="two-col">
-        <div class="panel">
-          <div style="font-weight:700; margin-bottom:0.45rem;">Before recording</div>
-          <ol class="steps">
-            <li>Pick a GitLab test repo with at least a few MRs, issues, and pipeline history.</li>
-            <li>Install Eunice with the script.</li>
-            <li>Add <code>NIA_API_KEY</code> in GitLab CI/CD variables.</li>
-            <li>Enable the three Eunice agents in the AI catalog.</li>
-            <li>Create a small MR with obvious debt signals (complex function, TODOs, missing tests).</li>
-            <li>Confirm the MR flow runs and produces a comment / issue.</li>
-          </ol>
-        </div>
-        <div class="panel">
-          <div style="font-weight:700; margin-bottom:0.45rem;">Video arc (works for judges)</div>
-          <ol class="steps">
-            <li>Problem: “Refactoring gets deprioritized because impact is vague.”</li>
-            <li>Show MR trigger in GitLab.</li>
-            <li>Show Eunice comment with measured inputs + formulas.</li>
-            <li>Show generated issue and ROI ranking.</li>
-            <li>Close with weekly/monthly report potential and team planning use case.</li>
-          </ol>
-          <div class="pill-row" style="margin-top:0.75rem;">
-            <span class="pill">Keep under 3 min</span>
-            <span class="pill">Show one real MR</span>
-            <span class="pill">Show one issue creation</span>
-            <span class="pill warn">Avoid placeholder links in demo</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="setup">
-      <h2 class="section-title">Setup</h2>
-      <div class="grid-3">
-        <div class="card">
-          <h3>1. Install</h3>
-          <p>Run the installer in the target GitLab repo. It adds <code>.gitlab/duo</code> configs and <code>eunice.yml</code>.</p>
-        </div>
-        <div class="card">
-          <h3>2. Configure</h3>
-          <p>Add <code>NIA_API_KEY</code>; optionally add Slack tokens. Edit <code>eunice.yml</code> assumptions (rates/thresholds).</p>
-        </div>
-        <div class="card">
-          <h3>3. Trigger</h3>
-          <p>Open an MR. Eunice analyzes, comments with evidence, and creates issues for high ROI debt.</p>
-        </div>
-      </div>
-      <div class="panel">
-        <div style="font-weight:700; margin-bottom:0.45rem;">Quick commands</div>
-        <div class="command"><span class="ok">git add .gitlab/ eunice.yml && git commit -m "feat: add eunice" && git push</span></div>
-      </div>
-    </section>
-
-    <section id="methodology">
-      <h2 class="section-title">Methodology (Transparent by Design)</h2>
-      <div class="two-col">
-        <div class="panel">
-          <div style="font-weight:700; margin-bottom:0.45rem;">Measured from GitLab</div>
-          <ul class="checklist">
-            <li>Commits touching a file (time-windowed)</li>
-            <li>MR review/merge duration</li>
-            <li>Bug issue time tracking (windowed)</li>
-            <li>Pipeline failures and durations</li>
+    <section id="troubleshooting" class="section panel">
+      <h2>Troubleshooting</h2>
+      <div class="two">
+        <div>
+          <h3>Common setup issues</h3>
+          <ul>
+            <li><strong>No findings:</strong> repo may not be indexed in Nia, or <code>NIA_API_KEY</code> is missing.</li>
+            <li><strong>No GitLab metrics:</strong> verify the agent has access through GitLab CI context (for example <code>CI_JOB_TOKEN</code>).</li>
+            <li><strong>No issue created:</strong> your thresholds in <code>eunice.yml</code> may be too high for the test MR.</li>
           </ul>
         </div>
-        <div class="panel">
-          <div style="font-weight:700; margin-bottom:0.45rem;">Configured assumptions</div>
-          <ul class="checklist">
-            <li>Developer hourly rate</li>
-            <li>CI debug hours / compute cost</li>
-            <li>Fix effort estimates</li>
-            <li>Issue creation thresholds</li>
+        <div>
+          <h3>Before opening an issue</h3>
+          <ul>
+            <li>Confirm the generated <code>.gitlab/duo/</code> files were committed and pushed.</li>
+            <li>Confirm the three Eunice agents are enabled in the AI catalog.</li>
+            <li>Re-run with a simpler test MR to validate the end-to-end path.</li>
           </ul>
         </div>
       </div>
-      <div class="panel" style="margin-top:1rem;">
-        <div style="font-weight:700; margin-bottom:0.4rem;">Important note</div>
-        <p style="margin:0; color:var(--muted)">
-          Eunice combines measured repository signals with user-configured assumptions. It is a prioritization tool,
-          not a forensic accounting system. The value is in transparent decision support and faster refactoring triage.
-        </p>
+      <div class="notice danger" style="margin-top:.9rem;">
+        Eunice is a decision-support tool. Cost estimates depend on your configured assumptions in <code>eunice.yml</code>.
       </div>
     </section>
 
-    <section id="docs">
-      <h2 class="section-title">Docs</h2>
-      <div class="grid-3">
+    <section id="docs" class="section">
+      <h2>Docs</h2>
+      <div class="grid3">
         <a class="card" href="https://github.com/ebuka1017/eunice/blob/main/README.md">
           <h3>README</h3>
-          <p>Project overview, architecture, examples, and FAQ.</p>
+          <p>Overview, architecture, examples, and FAQ.</p>
         </a>
         <a class="card" href="https://github.com/ebuka1017/eunice/blob/main/docs/setup-guide.md">
           <h3>Setup Guide</h3>
-          <p>Step-by-step installation and pre-demo validation checklist.</p>
+          <p>Detailed installation and test checklist.</p>
         </a>
         <a class="card" href="https://github.com/ebuka1017/eunice/blob/main/docs/slack-setup.md">
           <h3>Slack Setup</h3>
-          <p>Optional Slack integration for notifications and summaries.</p>
+          <p>Optional Slack integration configuration.</p>
         </a>
       </div>
     </section>
 
-    <div class="footer">
-      MIT licensed • Built for the GitLab AI Hackathon / Devpost flow • Last updated Feb 23, 2026
-    </div>
+    <div class="footer">MIT Licensed • GitLab Duo agent workflows + Nia-based analysis</div>
   </div>
 </body>
 </html>
