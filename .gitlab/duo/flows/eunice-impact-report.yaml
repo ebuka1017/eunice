@@ -186,7 +186,7 @@ components:
       
       *data period*: {start_date} to {end_date}  
       *generated*: {timestamp}  
-      *methodology*: [view docs](link)
+      *methodology*: [view docs](https://ebuka1017.github.io/eunice/#methodology)
       ```
       
       then:
@@ -201,7 +201,7 @@ components:
         🎯 {multiplier}x roi
         🌱 {kg}kg co2 saved
         
-        [view full report](link)
+        [view full report]({report_url})
         ```
 
 routing:

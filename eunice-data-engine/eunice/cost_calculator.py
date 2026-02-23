@@ -79,7 +79,8 @@ def calculate_annual_velocity_cost(
     avg_review_time_minutes: float,
     bug_hours_tracked: float,
     ci_failure_count_monthly: int,
-    config: EuniceConfig
+    config: EuniceConfig,
+    bug_hours_window_days: int = 30
 ) -> Dict:
     """
     calculate annual velocity cost
@@ -99,8 +100,11 @@ def calculate_annual_velocity_cost(
     monthly_review_hours = (commit_count_monthly * avg_review_time_minutes) / 60
     monthly_review_cost = monthly_review_hours * config.dev_rate
     
-    # bug fix cost (measured hours × config rate)
-    annual_bug_cost = bug_hours_tracked * config.dev_rate
+    # bug fix cost (annualize measured window to match annualized review/ci metrics)
+    if bug_hours_window_days <= 0:
+        bug_hours_window_days = 30
+    annualized_bug_hours = bug_hours_tracked * (365 / bug_hours_window_days)
+    annual_bug_cost = annualized_bug_hours * config.dev_rate
     
     # ci failure debugging (measured failures × config estimate × rate)
     monthly_ci_hours = ci_failure_count_monthly * config.avg_ci_failure_hours
@@ -129,6 +133,7 @@ def calculate_annual_velocity_cost(
         'assumptions_used': {
             'dev_hourly_rate_usd': config.dev_rate,
             'avg_ci_failure_debug_hours': config.avg_ci_failure_hours,
+            'bug_hours_window_days': bug_hours_window_days,
             'source': config.config['cost_assumptions']['source']
         }
     }
@@ -139,7 +144,8 @@ def calculate_time_savings_only(
     avg_review_time_minutes: float,
     bug_hours_tracked: float,
     ci_failure_count_monthly: int,
-    config: EuniceConfig
+    config: EuniceConfig,
+    bug_hours_window_days: int = 30
 ) -> Dict:
     """
     calculate savings in hours (no dollar conversion)
@@ -149,9 +155,13 @@ def calculate_time_savings_only(
     monthly_review_hours = (commit_count_monthly * avg_review_time_minutes) / 60
     monthly_ci_hours = ci_failure_count_monthly * config.avg_ci_failure_hours
     
+    if bug_hours_window_days <= 0:
+        bug_hours_window_days = 30
+    annualized_bug_hours = bug_hours_tracked * (365 / bug_hours_window_days)
+
     annual_hours = (
         (monthly_review_hours * 12) + 
-        bug_hours_tracked + 
+        annualized_bug_hours + 
         (monthly_ci_hours * 12)
     )
     
@@ -159,7 +169,7 @@ def calculate_time_savings_only(
         'annual_hours_saved': round(annual_hours, 1),
         'breakdown_hours': {
             'review_overhead': round(monthly_review_hours * 12, 1),
-            'bug_fixes': round(bug_hours_tracked, 1),
+            'bug_fixes': round(annualized_bug_hours, 1),
             'ci_failures': round(monthly_ci_hours * 12, 1)
         },
         'measured_inputs': {
@@ -167,6 +177,9 @@ def calculate_time_savings_only(
             'avg_review_minutes': round(avg_review_time_minutes, 2),
             'bug_hours_tracked': round(bug_hours_tracked, 2),
             'ci_failures_per_month': ci_failure_count_monthly
+        },
+        'assumptions_used': {
+            'bug_hours_window_days': bug_hours_window_days
         }
     }
 

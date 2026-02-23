@@ -3,7 +3,7 @@
 image: python:3.11-slim
 
 setup_commands:
-  - pip install --break-system-packages eunice-data-engine
+  - pip install --break-system-packages git+https://github.com/ebuka1017/eunice.git#subdirectory=eunice-data-engine
   - pip install --break-system-packages python-gitlab pyyaml
 
 environment:

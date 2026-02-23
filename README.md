@@ -91,15 +91,15 @@ eunice analyzes automatically! 🎉
 ```markdown
 ## 💰 technical debt analysis: auth.py
 
-### annual impact: $9,440
+### annual impact: $5,040
 
 #### measured from gitlab (last 30 days)
 | metric | value | source |
 |--------|-------|--------|
-| commits | 12 | [see commits](link) |
-| avg mr review | 14 min | [mrs](link) |
-| bug fix hours | 18 hrs | [issues](link) |
-| ci failures | 2 | [pipelines](link) |
+| commits | 12 | [see commits]({commit_links}) |
+| avg mr review | 14 min | [mrs]({mr_links}) |
+| bug fix hours (annual tracked) | 18 hrs | [issues]({issue_links}) |
+| ci failures | 2 | [pipelines]({pipeline_links}) |
 
 #### cost breakdown
 | category | calculation | annual cost |
@@ -114,7 +114,7 @@ eunice analyzes automatically! 🎉
 - avg ci failure debug: 1 hour
 
 #### fix effort: 6 hours
-**roi: 140x** (save $5,040 for $450 investment)
+**roi: 11.2x** (save $5,040 for $450 investment)
 
 #### recommended fix
 1. refactor validate_user() (lines 67-89)
@@ -288,7 +288,7 @@ a: yes, it's optional. just don't add slack tokens.
 
 ## contributing
 
-contributions welcome! see [contributing guide](CONTRIBUTING.md).
+contributions welcome! open an issue or PR.
 
 ---
 

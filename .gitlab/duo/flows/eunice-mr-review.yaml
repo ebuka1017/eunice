@@ -80,7 +80,7 @@ components:
          # get real metrics (last 30 days)
          commits = client.get_file_commits(project_id, file_path, 30)
          mrs = client.get_mrs_with_file_changes(project_id, file_path, 30)
-         bugs = client.get_bug_issues_with_time_tracking(project_id, file_path)
+         bugs = client.get_bug_issues_with_time_tracking(project_id, file_path, 30)
          pipelines = client.get_pipelines_touching_file(project_id, file_path, 30)
          
          # calculate costs
@@ -89,7 +89,8 @@ components:
              avg_review_time_minutes=avg([client.calculate_mr_review_time(mr) for mr in mrs]),
              bug_hours_tracked=sum([b['hours_spent'] for b in bugs]),
              ci_failure_count_monthly=len([p for p in pipelines if p.status == 'failed']),
-             config=config
+             config=config,
+             bug_hours_window_days=30
          )
          
          roi_data = calculate_roi(
@@ -174,7 +175,7 @@ components:
       | category | calculation | annual cost |
       |----------|-------------|-------------|
       | review overhead | {commits}/mo × {minutes} × ${rate}/hr × 12 | ${amount} |
-      | bug fixes | {hours} × ${rate}/hr | ${amount} |
+      | bug fixes | {hours}/30d × ${rate}/hr × 12.17 | ${amount} |
       | ci failures | {failures}/mo × {hours} × ${rate}/hr × 12 | ${amount} |
       | **total** | | **${total}** |
       
@@ -192,7 +193,7 @@ components:
       
       ---
       📊 priority score: {score}/10  
-      🔍 [full analysis](link)  
+      🔍 [full analysis]({analysis_url})  
       ⚙️ [edit assumptions](eunice.yml)
       ```
       

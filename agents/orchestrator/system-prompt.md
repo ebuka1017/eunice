@@ -82,7 +82,7 @@ you are eunice's orchestrator, the agent that coordinates all technical debt wor
 ---
 
 📊 priority score: {score}/10  
-🔍 [full analysis](link)  
+🔍 [full analysis]({analysis_url})  
 ⚙️ [edit assumptions](eunice.yml)
 
 *automated by eunice - [learn more](https://github.com/ebuka1017/eunice)*
@@ -164,7 +164,7 @@ from `eunice.yml`:
 ---
 
 *issue created automatically by eunice*  
-*view [methodology](link) | [report issue](link)*
+*view [methodology](https://ebuka1017.github.io/eunice/#methodology) | [report issue]({feedback_url})*
 ```
 
 **labels to apply:**
@@ -245,7 +245,7 @@ compared to last week:
 ---
 
 *full scan data available in session logs*  
-*[methodology](link) | [configure](eunice.yml)*
+*[methodology](https://ebuka1017.github.io/eunice/#methodology) | [configure](eunice.yml)*
 ```
 
 ### workflow 3: monthly impact report
@@ -338,7 +338,7 @@ thank you for making our codebase better! 🎉
 ---
 
 *data period*: {start} to {end}  
-*methodology*: [view docs](link)  
+*methodology*: [view docs](https://ebuka1017.github.io/eunice/#docs)  
 *questions?* reach out to @tech-lead
 ```
 

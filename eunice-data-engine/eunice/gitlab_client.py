@@ -112,7 +112,8 @@ class EuniceGitLabClient:
     def get_bug_issues_with_time_tracking(
         self, 
         project_id: str, 
-        file_path: str
+        file_path: str,
+        since_days: int = 30
     ) -> List[Dict]:
         """
         get bug issues mentioning file with time spent
@@ -123,9 +124,11 @@ class EuniceGitLabClient:
         
         self._check_rate_limit()
         
+        updated_after = (datetime.now() - timedelta(days=since_days)).isoformat()
         issues = project.issues.list(
             labels=['bug'],
             search=file_path,
+            updated_after=updated_after,
             all=True
         )
         
